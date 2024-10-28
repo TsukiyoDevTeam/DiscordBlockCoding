@@ -1,5 +1,5 @@
-import * as Blockly from "blockly";
-import javascript from "blockly/javascript";
+import * as Blockly from "blockly/core";
+import { Order, javascriptGenerator } from "blockly/javascript";
 import { createRestrictions } from "../functions/restrictions";
 
 Blockly.Blocks["member_getone"] = {
@@ -18,8 +18,8 @@ Blockly.Blocks["member_getone"] = {
     this.appendValueInput("server")
       .setCheck("server")
       .appendField("on the server");
-    this.setOutput(true, null);
-    this.setColour("#00A018");
+    this.setOutput(true, "member");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -39,7 +39,7 @@ Blockly.Blocks["member_getuser"] = {
       )
       .appendField("equal to");
     this.setOutput(true, "user");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -53,7 +53,7 @@ Blockly.Blocks["member_foreach"] = {
     this.appendStatementInput("code").setCheck("default");
     this.setPreviousStatement(true, "default");
     this.setNextStatement(true, "default");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -63,7 +63,7 @@ Blockly.Blocks["member_member"] = {
   init: function () {
     this.appendDummyInput().appendField("current member in loop");
     this.setOutput(true, "member");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -77,7 +77,7 @@ Blockly.Blocks["member_ban"] = {
     this.appendValueInput("reason").appendField("reason:").setCheck("String");
     this.setPreviousStatement(true, "default");
     this.setNextStatement(true, "default");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -92,7 +92,7 @@ Blockly.Blocks["member_timeout"] = {
     this.appendValueInput("reason").setCheck("String").appendField("reason:");
     this.setPreviousStatement(true, "default");
     this.setNextStatement(true, "default");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -106,7 +106,7 @@ Blockly.Blocks["member_kick"] = {
     this.appendValueInput("reason").appendField("reason:").setCheck("String");
     this.setPreviousStatement(true, "default");
     this.setNextStatement(true, "default");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -124,7 +124,7 @@ Blockly.Blocks["member_dm"] = {
     this.setInputsInline(false);
     this.setPreviousStatement(true, "default");
     this.setNextStatement(true, "default");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -143,10 +143,24 @@ Blockly.Blocks["member_dm_rows"] = {
     this.setInputsInline(false);
     this.setPreviousStatement(true, "default");
     this.setNextStatement(true, "default");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
+};
+
+javascriptGenerator.forBlock["member_dm_rows"] = function (block, generator) {
+  var user = generator.valueToCode(block, "member", Order.ATOMIC);
+  var content = generator.valueToCode(block, "content", Order.ATOMIC);
+  var embeds = generator.valueToCode(block, "embeds", Order.ATOMIC);
+  var rows = generator.statementToCode(block, "rows");
+
+  var code = `${user}.send({
+    content: ${content || "''"},
+    embeds: [${embeds.replaceAll("'", "")}],
+    components: [${rows}]
+  });`;
+  return code;
 };
 
 Blockly.Blocks["member_setnick"] = {
@@ -159,7 +173,7 @@ Blockly.Blocks["member_setnick"] = {
     this.setInputsInline(false);
     this.setPreviousStatement(true, "default");
     this.setNextStatement(true, "default");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -174,7 +188,7 @@ Blockly.Blocks["member_removetimeout"] = {
     this.setInputsInline(false);
     this.setPreviousStatement(true, "default");
     this.setNextStatement(true, "default");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -182,11 +196,11 @@ Blockly.Blocks["member_removetimeout"] = {
 
 Blockly.Blocks["member_bannable"] = {
   init: function () {
-    this.appendValueInput("member").setCheck("member").appendField("member");
-    this.appendDummyInput().appendField("is bannable by the bot?");
+    this.appendValueInput("member").setCheck("member").appendField("is member");
+    this.appendDummyInput().appendField("bannable by the bot?");
     this.setInputsInline(true);
     this.setOutput(true, "Boolean");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -194,11 +208,11 @@ Blockly.Blocks["member_bannable"] = {
 
 Blockly.Blocks["member_kickable"] = {
   init: function () {
-    this.appendValueInput("member").setCheck("member").appendField("member");
-    this.appendDummyInput().appendField("is kickable by the bot?");
+    this.appendValueInput("member").setCheck("member").appendField("is member");
+    this.appendDummyInput().appendField("kickable by the bot?");
     this.setInputsInline(true);
     this.setOutput(true, "Boolean");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -206,11 +220,11 @@ Blockly.Blocks["member_kickable"] = {
 
 Blockly.Blocks["member_timedout"] = {
   init: function () {
-    this.appendValueInput("member").setCheck("member").appendField("member");
-    this.appendDummyInput().appendField("is timed out?");
+    this.appendValueInput("member").setCheck("member").appendField("is member");
+    this.appendDummyInput().appendField("timed out?");
     this.setInputsInline(true);
     this.setOutput(true, "Boolean");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -223,10 +237,52 @@ Blockly.Blocks["member_color"] = {
       .appendField("display color of member:");
     this.setInputsInline(true);
     this.setOutput(true, "String");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
+};
+
+Blockly.Blocks["member_status"] = {
+  init: function () {
+    this.appendValueInput("member")
+      .setCheck("member")
+      .appendField("status of member:");
+    this.setOutput(true, "String");
+    this.setColour("#C17778");
+    this.setTooltip('Returns "idle", "online", "dnd", or "offline" as a text');
+    this.setHelpUrl("");
+  },
+};
+
+javascriptGenerator.forBlock["member_status"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
+
+  var code = `${member}?.presence?.status || 'offline'`;
+  return [code, Order.NONE];
+};
+
+Blockly.Blocks["member_userFlags"] = {
+  init: function () {
+    this.appendValueInput("member")
+      .setCheck("user")
+      .appendField("flags of user:");
+    this.setOutput(true, "Array");
+    this.setColour("#C17778");
+    this.setTooltip(
+      "Returns the flags of a user as a list/array (this includes the user's badges as well as other info"
+    );
+    this.setHelpUrl(
+      "https://discord-api-types.dev/api/discord-api-types-v10/enum/UserFlags"
+    );
+  },
+};
+
+javascriptGenerator.forBlock["member_userFlags"] = function (block, generator) {
+  var user = generator.valueToCode(block, "member", Order.ATOMIC);
+
+  var code = `${user}.flags.toArray()`;
+  return [code, Order.NONE];
 };
 
 Blockly.Blocks["member_id"] = {
@@ -236,7 +292,7 @@ Blockly.Blocks["member_id"] = {
       .appendField("ID of user/member:");
     this.setInputsInline(true);
     this.setOutput(true, "String");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -257,7 +313,7 @@ Blockly.Blocks["member_joined"] = {
       .appendField("of member:");
     this.setInputsInline(true);
     this.setOutput(true, "String");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -270,7 +326,7 @@ Blockly.Blocks["member_nickname"] = {
       .appendField("nickname of member:");
     this.setInputsInline(true);
     this.setOutput(true, "String");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -283,7 +339,7 @@ Blockly.Blocks["member_user"] = {
       .appendField("user of member:");
     this.setInputsInline(true);
     this.setOutput(true, "user");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -296,7 +352,33 @@ Blockly.Blocks["member_username"] = {
       .appendField("username of user:");
     this.setInputsInline(true);
     this.setOutput(true, "String");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
+    this.setTooltip("");
+    this.setHelpUrl("");
+  },
+};
+
+Blockly.Blocks["member_avatarURL"] = {
+  init: function () {
+    this.appendValueInput("user")
+      .setCheck(["user", "member"])
+      .appendField("avatar URL of user/member:");
+    this.setInputsInline(true);
+    this.setOutput(true, "String");
+    this.setColour("#C17778");
+    this.setTooltip("");
+    this.setHelpUrl("");
+  },
+};
+
+Blockly.Blocks["member_bannerURL"] = {
+  init: function () {
+    this.appendValueInput("user")
+      .setCheck("user")
+      .appendField("banner URL of user:");
+    this.setInputsInline(true);
+    this.setOutput(true, "String");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -304,11 +386,11 @@ Blockly.Blocks["member_username"] = {
 
 Blockly.Blocks["member_bot"] = {
   init: function () {
-    this.appendValueInput("member").setCheck("user").appendField("user");
-    this.appendDummyInput().appendField("is a bot?");
+    this.appendValueInput("member").setCheck("user").appendField("is user");
+    this.appendDummyInput().appendField("a bot?");
     this.setInputsInline(true);
     this.setOutput(true, "Boolean");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -316,11 +398,11 @@ Blockly.Blocks["member_bot"] = {
 
 Blockly.Blocks["member_system"] = {
   init: function () {
-    this.appendValueInput("member").setCheck("user").appendField("user");
-    this.appendDummyInput().appendField("is official Discord?");
+    this.appendValueInput("member").setCheck("user").appendField("is user");
+    this.appendDummyInput().appendField("official Discord?");
     this.setInputsInline(true);
     this.setOutput(true, "Boolean");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -333,7 +415,7 @@ Blockly.Blocks["member_accent"] = {
       .appendField("accent color of user:");
     this.setInputsInline(true);
     this.setOutput(true, "String");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
@@ -354,243 +436,183 @@ Blockly.Blocks["member_created"] = {
       .appendField("of user:");
     this.setInputsInline(true);
     this.setOutput(true, "String");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
 };
 
-javascript.javascriptGenerator.forBlock["member_created"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_created"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
   var type = block.getFieldValue("type");
 
   var code = `${member}.${type}`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_accent"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_accent"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.hexAccentColor`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_system"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_system"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.system`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_bot"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_bot"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.bot`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_username"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_username"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.username`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_user"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_avatarURL"] = function (block, generator) {
+  var user = generator.valueToCode(block, "user", Order.ATOMIC);
+
+  var code = `${user}.displayAvatarURL()`;
+  return [code, Order.NONE];
+};
+
+javascriptGenerator.forBlock["member_bannerURL"] = function (block, generator) {
+  var user = generator.valueToCode(block, "user", Order.ATOMIC);
+
+  var code = `${user}.bannerURL()`;
+  return [code, Order.NONE];
+};
+
+javascriptGenerator.forBlock["member_user"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.user`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_nickname"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_nickname"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.nickname`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_joined"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_joined"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
   var type = block.getFieldValue("type");
 
   var code = `${member}.${type}`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_id"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_id"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.id`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_color"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_color"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.displayHexColor`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_timedout"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_timedout"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.isCommunicationDisabled()`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_kickable"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_kickable"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.kickable`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_bannable"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_bannable"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
 
   var code = `${member}.bannable`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_removetimeout"] = function (
+javascriptGenerator.forBlock["member_removetimeout"] = function (
   block,
   generator
 ) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
-  var reason = generator.valueToCode(block, "reason", javascript.Order.ATOMIC);
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
+  var reason = generator.valueToCode(block, "reason", Order.ATOMIC);
 
   var code = `${member}.timeout(null, ${reason || "''"});`;
   return code;
 };
 
-javascript.javascriptGenerator.forBlock["member_setnick"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
-  var nickname = generator.valueToCode(
-    block,
-    "nickname",
-    javascript.Order.ATOMIC
-  );
-  var reason = generator.valueToCode(block, "reason", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_setnick"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
+  var nickname = generator.valueToCode(block, "nickname", Order.ATOMIC);
+  var reason = generator.valueToCode(block, "reason", Order.ATOMIC);
 
   var code = `${member}.setNickname(${nickname || "''"}, ${reason || "''"});`;
   return code;
 };
 
-javascript.javascriptGenerator.forBlock["member_dm"] = function (
-  block,
-  generator
-) {
-  var user = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
-  var content = generator.valueToCode(
-    block,
-    "content",
-    javascript.Order.ATOMIC
-  );
-  var embeds = generator.valueToCode(block, "embeds", javascript.Order.ATOMIC);
-  var rows = generator.statementToCode(block, "rows");
+javascriptGenerator.forBlock["member_dm"] = function (block, generator) {
+  var user = generator.valueToCode(block, "member", Order.ATOMIC);
+  var content = generator.valueToCode(block, "content", Order.ATOMIC);
+  var embeds = generator.valueToCode(block, "embeds", Order.ATOMIC);
 
   var code = `${user}.send({
     content: ${content || "''"},
-    embeds: [${embeds}],
-    components: [${rows}]
+    embeds: [${embeds.replaceAll("'", "")}]
   });`;
   return code;
 };
 
-javascript.javascriptGenerator.forBlock["member_kick"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
-  var reason = generator.valueToCode(block, "reason", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_kick"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
+  var reason = generator.valueToCode(block, "reason", Order.ATOMIC);
 
   var code = `${member}.kick(${reason});`;
   return code;
 };
 
-javascript.javascriptGenerator.forBlock["member_timeout"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
-  var seconds = generator.valueToCode(
-    block,
-    "seconds",
-    javascript.Order.ATOMIC
-  );
-  var reason = generator.valueToCode(block, "reason", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_timeout"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
+  var seconds = generator.valueToCode(block, "seconds", Order.ATOMIC);
+  var reason = generator.valueToCode(block, "reason", Order.ATOMIC);
 
   var code = `${member}.timeout(${seconds} * 1000, ${reason});`;
   return code;
 };
 
-javascript.javascriptGenerator.forBlock["member_ban"] = function (
-  block,
-  generator
-) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
-  var reason = generator.valueToCode(block, "reason", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_ban"] = function (block, generator) {
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
+  var reason = generator.valueToCode(block, "reason", Order.ATOMIC);
 
   var code = `${member}.ban({ reason: ${reason} });`;
   return code;
 };
 
-javascript.javascriptGenerator.forBlock["member_member"] = function (
-  block,
-  generator
-) {
+javascriptGenerator.forBlock["member_member"] = function (block, generator) {
   var code = `member`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_foreach"] = function (
-  block,
-  generator
-) {
-  var server = generator.valueToCode(block, "server", javascript.Order.ATOMIC);
+javascriptGenerator.forBlock["member_foreach"] = function (block, generator) {
+  var server = generator.valueToCode(block, "server", Order.ATOMIC);
   var foreach = generator.statementToCode(block, "code");
 
   var code = `${server}.members.cache.forEach(member => {
@@ -598,47 +620,27 @@ ${foreach}});`;
   return code;
 };
 
-javascript.javascriptGenerator.forBlock["member_getuser"] = function (
-  block,
-  generator
-) {
+javascriptGenerator.forBlock["member_getuser"] = function (block, generator) {
   var dropdown_type = block.getFieldValue("type");
-  var value_value = generator.valueToCode(
-    block,
-    "value",
-    javascript.Order.ATOMIC
-  );
+  var value_value = generator.valueToCode(block, "value", Order.ATOMIC);
 
-  var code = `client.users.cache${
-    dropdown_type === "id"
-      ? `.get(${value_value})`
-      : `.find(u => u.username == ${value_value})`
-  }`;
-  return [code, javascript.Order.NONE];
+  var code = `client.users.cache${dropdown_type === "id"
+    ? `.get(${value_value})`
+    : `.find(u => u.username == ${value_value})`
+    }`;
+  return [code, Order.NONE];
 };
 
-javascript.javascriptGenerator.forBlock["member_getone"] = function (
-  block,
-  generator
-) {
+javascriptGenerator.forBlock["member_getone"] = function (block, generator) {
   var dropdown_type = block.getFieldValue("type");
-  var value_value = generator.valueToCode(
-    block,
-    "value",
-    javascript.Order.ATOMIC
-  );
-  var value_server = generator.valueToCode(
-    block,
-    "server",
-    javascript.Order.ATOMIC
-  );
+  var value_value = generator.valueToCode(block, "value", Order.ATOMIC);
+  var value_server = generator.valueToCode(block, "server", Order.ATOMIC);
 
-  var code = `${value_server}.members.cache${
-    dropdown_type === "id"
-      ? `.get(${value_value})`
-      : `.find(m => m.username == ${value_value})`
-  }`;
-  return [code, javascript.Order.NONE];
+  var code = `${value_server}.members.cache${dropdown_type === "id"
+    ? `.get(${value_value})`
+    : `.find(m => m.username == ${value_value})`
+    }`;
+  return [code, Order.NONE];
 };
 
 Blockly.Blocks["member_hasPermission"] = {
@@ -651,26 +653,33 @@ Blockly.Blocks["member_hasPermission"] = {
       .appendField("have the");
     this.appendDummyInput().appendField("?");
     this.setOutput(true, "Boolean");
-    this.setColour("#00A018");
+    this.setColour("#C17778");
     this.setTooltip("");
     this.setHelpUrl("");
   },
 };
 
-javascript.javascriptGenerator.forBlock["member_hasPermission"] = function (
+javascriptGenerator.forBlock["member_hasPermission"] = function (
   block,
   generator
 ) {
-  var member = generator.valueToCode(block, "member", javascript.Order.ATOMIC);
-  var permission = generator.valueToCode(
-    block,
-    "permission",
-    javascript.Order.ATOMIC
-  );
+  var member = generator.valueToCode(block, "member", Order.ATOMIC);
+  var permission = generator.valueToCode(block, "permission", Order.ATOMIC);
 
   var code = `${member}.permissions.has(${permission})`;
-  return [code, javascript.Order.NONE];
+  return [code, Order.NONE];
 };
+
+createRestrictions(
+  ["member_avatarURL", "member_bannerURL"],
+  [
+    {
+      type: "notEmpty",
+      blockTypes: ["user"],
+      message: "You must specify a user or member",
+    },
+  ]
+);
 
 createRestrictions(
   ["member_member"],
@@ -698,6 +707,7 @@ createRestrictions(
   [
     "member_bot",
     "member_dm",
+    "member_dm_rows",
     "member_kick",
     "member_timeout",
     "member_ban",
@@ -712,12 +722,13 @@ createRestrictions(
     "member_id",
     "member_color",
     "member_timedout",
+    "member_userFlags",
   ],
   [
     {
       type: "notEmpty",
       blockTypes: ["member"],
-      message: "You must specify the member.",
+      message: "You must specify the user/member.",
     },
   ]
 );

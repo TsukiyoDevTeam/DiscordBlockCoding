@@ -164,6 +164,7 @@ module.exports = [
       "main": "index.js",
       "dependencies": {
         "asynckit": "^0.4.0",
+        "axios": "^1.7.7",
         "combined-stream": "^1.0.8",
         "delayed-stream": "^1.0.0",
         "discord-api-types": "^0.33.5",
@@ -190,7 +191,8 @@ module.exports = [
         "whatwg-url": "^5.0.0",
         "ws": "^8.17.0",
         "dotenv": "^16.0.3",
-        "lyrics-finder": "^21.7.0"
+        "lyrics-finder": "^21.7.0",
+        "ms": "^2.1.3"
       },
       "scripts": {
         "start": "node index.js",
